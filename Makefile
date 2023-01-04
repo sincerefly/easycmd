@@ -1,6 +1,5 @@
-
 SHELL := /bin/bash
-DATE ?= $(shell date +%FT%T%z)
+DATE ?= $(shell date '+%Y-%m-%d %H:%M:%S')
 BASE_PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VERSION ?= $(shell git describe --tags --always --match=* 2> /dev/null || \
            			cat $(CURDIR)/.version 2> /dev/null || echo v0)
