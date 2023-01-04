@@ -11,6 +11,6 @@ MODULE = $(shell env GO111MODULE=on go list -m)
 
 LDFLAGS += -X "$(MODULE)/version.Version=$(VERSION)" -X "$(MODULE)/version.CommitSHA=$(VERSION_HASH)"
 
-.PHONY: build-backend
-build-backend: ## Build
+.PHONY: build
+build: ## Build
 	$Q $(go) build -ldflags '$(LDFLAGS)' -o .
