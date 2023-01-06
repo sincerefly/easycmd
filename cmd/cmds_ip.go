@@ -21,7 +21,7 @@ func init() {
 
 var ipCmd = &cobra.Command{
 	Use:   "ip",
-	Short: "query local ip address",
+	Short: "Query your local ip address",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		ipService := NewIpService(v.GetStringSlice("ip.address"))
