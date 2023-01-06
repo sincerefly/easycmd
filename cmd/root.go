@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"strings"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
+	v "github.com/spf13/viper"
 	"gitlab.com/avarf/getenvs"
 )
 
@@ -24,6 +28,14 @@ func python(fn pythonFunc, envName string) cobraFunc {
 	}
 }
 
+var (
+	cfgFile string
+)
+
+func init() {
+	cobra.OnInitialize(initConfig)
+}
+
 var rootCmd = &cobra.Command{
 
 	Use:   "easycmd",
@@ -35,6 +47,35 @@ var rootCmd = &cobra.Command{
 	// },
 
 	Run: python(func(cmd *cobra.Command, args []string, data Data) {
+		log.Println(cfgFile)
 		fmt.Printf("hi,%s\n", data.Name)
 	}, "NAME"),
+}
+
+func initConfig() {
+	if cfgFile == "" {
+		home, err := homedir.Dir()
+
+		checkErr(err)
+		v.AddConfigPath(".")
+		v.AddConfigPath(home)
+		v.AddConfigPath("/etc/easycmd/")
+		v.SetConfigName("config")
+		v.SetConfigType("toml")
+	} else {
+		v.SetConfigFile(cfgFile)
+	}
+
+	v.SetEnvPrefix("ec")
+	v.AutomaticEnv()
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	if err := v.ReadInConfig(); err != nil {
+		if _, ok := err.(v.ConfigParseError); ok {
+			panic(err)
+		}
+		cfgFile = "No config file used"
+	} else {
+		cfgFile = "Using config file: " + v.ConfigFileUsed()
+	}
 }
