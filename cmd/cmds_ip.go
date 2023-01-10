@@ -25,16 +25,20 @@ var ipCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		ipService := NewIpService(v.GetStringSlice("ip.address"))
-		if cmd.Flags().Lookup("all").Changed {
+
+		if _, has := getParamB(cmd.Flags(), "all"); has {
 			ipService.QueryAll()
-		} else if cmd.Flags().Lookup("random").Changed {
-			ipService.QueryRandom()
-		} else if cmd.Flags().Lookup("server").Changed {
-			url := cmd.Flags().Lookup("server").Value.String()
-			ipService.QueryServerIp(url)
-		} else {
-			ipService.QueryRandom()
+			return
 		}
+		if _, has := getParamB(cmd.Flags(), "random"); has {
+			ipService.QueryRandom()
+			return
+		}
+		if server, has := getParamB(cmd.Flags(), "server"); has {
+			ipService.QueryServerIp(server)
+			return
+		}
+		ipService.QueryRandom()
 	},
 }
 
