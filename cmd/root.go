@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"easycmd/version"
+	"easycmd/common"
 	"fmt"
 	"log"
 	"strings"
@@ -37,7 +37,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	flags := rootCmd.Flags()
-	flags.BoolP("version", "v", false, "version")
+	flags.BoolP("version", "v", false, "output version")
 }
 
 var rootCmd = &cobra.Command{
@@ -51,13 +51,15 @@ var rootCmd = &cobra.Command{
 	// },
 
 	Run: python(func(cmd *cobra.Command, args []string, data Data) {
+
+		if cmd.Flags().Lookup("version").Changed {
+			common.PrintVersion()
+			return
+		}
+
 		log.Println(cfgFile)
 		fmt.Printf("hi,%s\n", data.Name)
 
-		if cmd.Flags().Lookup("version").Changed {
-			fmt.Println("Easycmd v" + version.Version + "/" + version.CommitSHA)
-			return
-		}
 	}, "NAME"),
 }
 

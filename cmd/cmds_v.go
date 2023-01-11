@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"easycmd/version"
-	"fmt"
+	"easycmd/common"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +13,6 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Easycmd v" + version.Version + "/" + version.CommitSHA)
+		common.PrintVersion()
 	},
 }
