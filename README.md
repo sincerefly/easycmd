@@ -1,6 +1,8 @@
-# easycmd
+# Easycmd 
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-_red.svg"></a>
+<a href="https://github.com/projectdiscovery/simplehttpserver/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
 
-A terminal tool template, you can create your own tools base this app
+A terminal tool sample, you can create your own tools base this app
 
 ## Usage
 
