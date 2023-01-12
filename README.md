@@ -4,6 +4,27 @@ A terminal tool template, you can create your own tools base this app
 
 ## Usage
 
+```bash
+$ ./easycmd -h   
+Long Terminal Usage desc
+
+Usage:
+  easycmd [flags]
+  easycmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  ip          Query your local ip address
+  version     Print the version number
+
+Flags:
+  -h, --help      help for easycmd
+  -v, --version   output version
+
+Use "easycmd [command] --help" for more information about a command.
+```
+
 ### Version
 
 ```bash
