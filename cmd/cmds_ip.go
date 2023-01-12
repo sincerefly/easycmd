@@ -62,7 +62,7 @@ func (I *IpService) QueryAll() {
 
 // QueryRandom random query
 func (I *IpService) QueryRandom() {
-	serverIp := random.RandomChoice(I.ServicesAddress)
+	serverIp := random.Choice(I.ServicesAddress)
 	I.print(serverIp, I.request(serverIp))
 }
 

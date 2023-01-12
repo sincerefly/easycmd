@@ -9,7 +9,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-func RandomChoice[T comparable](elems []T) T {
+func Choice[T comparable](elems []T) T {
 	idx := rand.Intn(len(elems))
 	return elems[idx]
 }
