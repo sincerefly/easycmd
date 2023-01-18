@@ -27,7 +27,7 @@ func DoRequest(req *http.Request) (map[string]interface{}, error) {
 }
 
 /*
-	向 BytePower 发起 Post 请求
+	发起 Post 请求
 */
 func Post(url string, body io.Reader) ([]byte, int, error) {
 
@@ -35,14 +35,6 @@ func Post(url string, body io.Reader) ([]byte, int, error) {
 	if err != nil {
 		return nil, 0, err
 	}
-	//appHeader := map[string]string{
-	//	"Accept":                     config.Conf.App.Accept,
-	//	"X-BytePower-Application-Id": config.Conf.App.Id,
-	//	"X-BytePower-Auth-Token":     utils.GenerateBPAuthToken(config.Conf.Bp.KeyID, config.Conf.Bp.KeySecret),
-	//}
-	//for h, v := range appHeader {
-	//	req.Header.Add(h, v)
-	//}
 	var client = &http.Client{
 		Timeout: time.Second * 30,
 	}
@@ -61,7 +53,7 @@ func Post(url string, body io.Reader) ([]byte, int, error) {
 }
 
 /*
-	向 BytePower 发起 Get 请求
+	发起 Get 请求
 */
 func Get(url string, appHeader map[string]string) ([]byte, int, error) {
 
@@ -69,11 +61,6 @@ func Get(url string, appHeader map[string]string) ([]byte, int, error) {
 	if err != nil {
 		return nil, 0, err
 	}
-	//appHeader := map[string]string{
-	//	"Accept":                     config.Conf.App.Accept,
-	//	"X-BytePower-Application-Id": config.Conf.App.Id,
-	//	"X-BytePower-Auth-Token":     utils.GenerateBPAuthToken(config.Conf.Bp.KeyID, config.Conf.Bp.KeySecret),
-	//}
 	for h, v := range appHeader {
 		req.Header.Add(h, v)
 	}
