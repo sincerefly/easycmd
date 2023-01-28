@@ -1,6 +1,9 @@
 package requests
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 	"testing"
 )
@@ -16,5 +19,37 @@ func TestGet(t *testing.T) {
 	}
 	if string(data) != "GET" {
 		t.Errorf("Get method expected GET, but %s got", data)
+	}
+}
+
+type Body struct {
+	Name string `json:"name"`
+}
+
+func TestPost(t *testing.T) {
+
+	body := Body{
+		Name: "david",
+	}
+
+	bodyByte, err := json.Marshal(body)
+	if err != nil {
+		fmt.Printf("Error: %s", err.Error())
+	}
+
+	data, statusCode, err := Post("https://httpbin.org/post", bytes.NewReader(bodyByte))
+	if err != nil {
+		log.Println(err.Error())
+	}
+	if statusCode != 200 {
+		t.Errorf("Get method expected 200 OK, but %d got", statusCode)
+	}
+	fmt.Println(string(data))
+
+	d := map[string]any{}
+	err = json.Unmarshal(data, &d)
+
+	if err != nil || d["json"].(map[string]any)["name"].(string) != "david" {
+		t.Errorf("Get method expected POST, but %s got", data)
 	}
 }
