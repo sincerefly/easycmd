@@ -1,30 +1,11 @@
 package requests
 
 import (
-	"errors"
-	"github.com/intel-go/fastjson"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
-
-func DoRequest(req *http.Request) (map[string]interface{}, error) {
-	if req == nil {
-		return nil, errors.New("param error")
-	}
-	url := req.URL.Scheme + "://" + req.URL.Host + req.URL.Path
-	resBody, _, err := Post(url, req.Body)
-	if err != nil {
-		return nil, err
-	}
-	var response map[string]interface{}
-	err = fastjson.Unmarshal(resBody, &response)
-	if err != nil {
-		return nil, err
-	}
-	return response, nil
-}
 
 /*
 	发起 Post 请求
