@@ -42,13 +42,13 @@ Query your host ip address
 
 ```bash
 # random service
-$ easy ip
+$ easycmd ip
 https://icanhazip.com                     43.77.88.118
 ```
 
 ```bash
 # all services
-$ easy ip -a
+$ easycmd ip -a
 https://ifconfig.me                       43.77.88.118
 http://ip.sb                              43.77.88.118
 http://ip.gs                              43.77.88.118
