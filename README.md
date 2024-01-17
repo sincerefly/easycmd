@@ -5,6 +5,7 @@
 <a href="https://github.com/sincerefly/easycmd/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
 <a href='https://coveralls.io/github/sincerefly/easycmd?branch=main'><img src='https://coveralls.io/repos/github/sincerefly/easycmd/badge.svg?branch=main' alt='Coverage Status' /></a>
 [![codecov](https://codecov.io/gh/sincerefly/easycmd/graph/badge.svg?token=W8Z0SWZJG3)](https://codecov.io/gh/sincerefly/easycmd)
+![CodeQL](https://github.com/sincerefly/easycmd/workflows/CodeQL/badge.svg)
 
 A terminal tool sample, you can create your own tools base this app
 
