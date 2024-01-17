@@ -39,7 +39,7 @@ func TestPost(t *testing.T) {
 	if err != nil {
 		log.Println(err.Error())
 	}
-	if statusCode != 200 {
+	if statusCode != http.StatusOK {
 		t.Errorf("Get method expected 200 OK, but %d got", statusCode)
 	}
 	fmt.Println(string(data))
