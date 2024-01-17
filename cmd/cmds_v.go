@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"easycmd/common"
+	"github.com/sincerefly/easycmd/common"
 	"github.com/spf13/cobra"
 )
 

@@ -1,4 +1,4 @@
-module easycmd
+module github.com/sincerefly/easycmd
 
 go 1.20
 

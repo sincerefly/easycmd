@@ -1,7 +1,7 @@
 package main
 
 import (
-	"easycmd/cmd"
+	"github.com/sincerefly/easycmd/cmd"
 )
 
 func main() {

@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"easycmd/utils/random"
-	"easycmd/utils/requests"
 	"fmt"
+	"github.com/sincerefly/easycmd/utils/random"
+	"github.com/sincerefly/easycmd/utils/requests"
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
 	"log"

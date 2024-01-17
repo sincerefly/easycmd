@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"easycmd/common"
 	"fmt"
+	"github.com/sincerefly/easycmd/common"
 	"log"
 	"strings"
 
