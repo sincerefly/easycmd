@@ -2,12 +2,7 @@ package random
 
 import (
 	"math/rand"
-	"time"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 func Choice[T comparable](elems []T) T {
 	idx := rand.Intn(len(elems))
