@@ -1,0 +1,25 @@
+codecov:
+  require_ci_to_pass: yes
+coverage:
+  status:
+    patch: no
+    project:
+      default:
+        threshold: 1%
+        if_not_found: success
+    changes: no
+  #What precision do you want the coverage value to be
+  precision: 2
+  #The value range where you want the value to be green
+  range: "50...100"
+ignore:
+  - "test/.*"
+  - ".github/.*"
+  - "images/.*"
+  - ".mvn/.*"
+  - ".style/.*"
+  - "*.md"
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: no
