@@ -1,8 +1,9 @@
 package random
 
 import (
-	"github.com/magiconair/properties/assert"
 	"testing"
+
+	"github.com/magiconair/properties/assert"
 )
 
 func TestChoice(t *testing.T) {
