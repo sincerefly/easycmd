@@ -9,10 +9,10 @@ jobs:
         go:
           - '1.24'
     steps:
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: go test -v -coverprofile=profile.cov ./...
 
       - name: Send coverage
