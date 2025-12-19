@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/sincerefly/easycmd/common"
 	"log"
+	"os"
 	"strings"
 
-	"github.com/mitchellh/go-homedir"
+	"github.com/sincerefly/easycmd/common"
+
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
 	"gitlab.com/avarf/getenvs"
@@ -65,7 +66,7 @@ var rootCmd = &cobra.Command{
 
 func initConfig() {
 	if cfgFile == "" {
-		home, err := homedir.Dir()
+		home, err := os.UserHomeDir()
 
 		checkErr(err)
 		v.AddConfigPath(".")

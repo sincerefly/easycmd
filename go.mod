@@ -6,7 +6,6 @@ toolchain go1.24.4
 
 require (
 	github.com/magiconair/properties v1.8.10
-	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
