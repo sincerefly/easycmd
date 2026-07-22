@@ -10,7 +10,6 @@ import (
 
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
-	"gitlab.com/avarf/getenvs"
 )
 
 type cobraFunc func(cmd *cobra.Command, args []string)
@@ -22,7 +21,7 @@ type Data struct {
 
 func python(fn pythonFunc, envName string) cobraFunc {
 	return func(cmd *cobra.Command, args []string) {
-		name := getenvs.GetEnvString(envName, "dong")
+		name := os.Getenv(envName)
 		data := Data{
 			Name: name,
 		}
@@ -42,17 +41,10 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-
 	Use:   "easycmd",
 	Short: "A terminal tool template",
 	Long:  "Long Terminal Usage desc",
-
-	// Run: func(cmd *cobra.Command, args []string) {
-	//   fmt.Println("just run")
-	// },
-
 	Run: python(func(cmd *cobra.Command, args []string, data Data) {
-
 		if cmd.Flags().Lookup("version").Changed {
 			common.PrintVersion()
 			return
@@ -60,14 +52,12 @@ var rootCmd = &cobra.Command{
 
 		log.Println(cfgFile)
 		fmt.Printf("hi,%s\n", data.Name)
-
 	}, "NAME"),
 }
 
 func initConfig() {
 	if cfgFile == "" {
 		home, err := os.UserHomeDir()
-
 		checkErr(err)
 		v.AddConfigPath(".")
 		v.AddConfigPath(home)
@@ -84,7 +74,7 @@ func initConfig() {
 
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(v.ConfigParseError); ok {
-			panic(err)
+			log.Fatal(err)
 		}
 		cfgFile = "No config file used"
 	} else {

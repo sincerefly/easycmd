@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         go:
-          - '1.24'
+          - '1.25'
 
     steps:
       - name: Checkout code
@@ -28,7 +28,6 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
-
         with:
           files: ./coverage.txt
         env:

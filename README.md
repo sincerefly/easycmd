@@ -3,7 +3,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/sincerefly/easycmd)](https://goreportcard.com/report/github.com/sincerefly/easycmd)
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-_red.svg"></a>
 <a href="https://github.com/sincerefly/easycmd/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"></a>
-<a href='https://coveralls.io/github/sincerefly/easycmd?branch=main'><img src='https://coveralls.io/repos/github/sincerefly/easycmd/badge.svg?branch=main' alt='Coverage Status' /></a>
 [![codecov](https://codecov.io/gh/sincerefly/easycmd/graph/badge.svg?token=W8Z0SWZJG3)](https://codecov.io/gh/sincerefly/easycmd)
 ![CodeQL](https://github.com/sincerefly/easycmd/workflows/CodeQL/badge.svg)
 

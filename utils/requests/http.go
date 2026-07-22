@@ -1,63 +1,74 @@
 package requests
 
 import (
+	"context"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"time"
 )
 
-/*
-	发起 Post 请求
-*/
-func Post(url string, body io.Reader) ([]byte, int, error) {
+const defaultTimeout = 30 * time.Second
 
-	req, err := http.NewRequest("POST", url, body)
-	if err != nil {
-		return nil, 0, err
-	}
-	var client = &http.Client{
-		Timeout: time.Second * 30,
-	}
-	r, err := client.Do(req)
-	if err != nil {
-		return nil, 0, err
-	}
-	defer func() {
-		_ = r.Body.Close()
-	}()
-	resBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return nil, r.StatusCode, err
-	}
-	return resBody, r.StatusCode, nil
+// DefaultClient is the shared HTTP client used by package-level helpers.
+var DefaultClient = NewClient(defaultTimeout)
+
+type Client struct {
+	httpClient *http.Client
 }
 
-/*
-	发起 Get 请求
-*/
-func Get(url string, appHeader map[string]string) ([]byte, int, error) {
+func NewClient(timeout time.Duration) *Client {
+	return &Client{
+		httpClient: &http.Client{Timeout: timeout},
+	}
+}
 
-	req, err := http.NewRequest("GET", url, nil)
+func Get(url string, headers map[string]string) ([]byte, int, error) {
+	return DefaultClient.Get(url, headers)
+}
+
+func Post(url string, body io.Reader) ([]byte, int, error) {
+	return DefaultClient.Post(url, body)
+}
+
+func (c *Client) Get(url string, headers map[string]string) ([]byte, int, error) {
+	return c.GetWithContext(context.Background(), url, headers)
+}
+
+func (c *Client) Post(url string, body io.Reader) ([]byte, int, error) {
+	return c.PostWithContext(context.Background(), url, body)
+}
+
+func (c *Client) GetWithContext(ctx context.Context, url string, headers map[string]string) ([]byte, int, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, 0, err
 	}
-	for h, v := range appHeader {
+	for h, v := range headers {
 		req.Header.Add(h, v)
 	}
-	var client = &http.Client{
-		Timeout: time.Second * 30,
+	return c.do(req)
+}
+
+func (c *Client) PostWithContext(ctx context.Context, url string, body io.Reader) ([]byte, int, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
+	if err != nil {
+		return nil, 0, err
 	}
-	r, err := client.Do(req)
+	return c.do(req)
+}
+
+func (c *Client) do(req *http.Request) ([]byte, int, error) {
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, 0, err
 	}
 	defer func() {
-		_ = r.Body.Close()
+		_ = resp.Body.Close()
 	}()
-	resBody, err := ioutil.ReadAll(r.Body)
+
+	resBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, r.StatusCode, err
+		return nil, resp.StatusCode, err
 	}
-	return resBody, r.StatusCode, nil
+	return resBody, resp.StatusCode, nil
 }
