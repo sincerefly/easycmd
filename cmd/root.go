@@ -52,14 +52,22 @@ var rootCmd = &cobra.Command{
 		}
 
 		log.Println(cfgFile)
-		fmt.Printf("hi,%s\n", data.Name)
+		fmt.Fprintf(cmd.OutOrStdout(), "hi,%s\n", data.Name)
 	}, "NAME"),
 }
 
 func initConfig() {
+	if err := loadConfig(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func loadConfig() error {
 	if cfgFile == "" {
 		home, err := os.UserHomeDir()
-		checkErr(err)
+		if err != nil {
+			return err
+		}
 		v.AddConfigPath(".")
 		v.AddConfigPath(home)
 		v.AddConfigPath("/etc/easycmd/")
@@ -75,10 +83,12 @@ func initConfig() {
 
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := errors.AsType[v.ConfigParseError](err); ok {
-			log.Fatal(err)
+			return err
 		}
 		cfgFile = "No config file used"
-	} else {
-		cfgFile = "Using config file: " + v.ConfigFileUsed()
+		return nil
 	}
+
+	cfgFile = "Using config file: " + v.ConfigFileUsed()
+	return nil
 }

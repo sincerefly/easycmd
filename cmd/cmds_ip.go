@@ -3,8 +3,10 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -16,8 +18,22 @@ import (
 
 var ErrNoServices = errors.New("no ip services configured")
 
+var ipServiceFactory = func(addrs []string) *IpService {
+	return NewIpService(addrs)
+}
+
 type HTTPClient interface {
 	Get(url string, headers map[string]string) ([]byte, int, error)
+}
+
+type Chooser interface {
+	Choice([]string) (string, error)
+}
+
+type randomChooser struct{}
+
+func (randomChooser) Choice(addrs []string) (string, error) {
+	return random.Choice(addrs)
 }
 
 func init() {
@@ -32,44 +48,53 @@ func init() {
 var ipCmd = &cobra.Command{
 	Use:   "ip",
 	Short: "Query your local ip address",
-	Run: func(cmd *cobra.Command, args []string) {
-		ipService := NewIpService(v.GetStringSlice("ip.address"))
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ipService := ipServiceFactory(v.GetStringSlice("ip.address"))
 
 		if _, has := getBoolParamB(cmd.Flags(), "all"); has {
-			if err := ipService.QueryAll(); err != nil {
-				log.Fatal(err)
-			}
-			return
+			return ipService.QueryAll()
 		}
 		if _, has := getBoolParamB(cmd.Flags(), "random"); has {
-			if err := ipService.QueryRandom(); err != nil {
-				log.Fatal(err)
-			}
-			return
+			return ipService.QueryRandom()
 		}
 		if server, has := getStringParamB(cmd.Flags(), "server"); has {
 			ipService.QueryServerIp(server)
-			return
+			return nil
 		}
-		if err := ipService.QueryRandom(); err != nil {
-			log.Fatal(err)
-		}
+		return ipService.QueryRandom()
 	},
 }
 
 type IpService struct {
 	ServicesAddress []string
 	client          HTTPClient
+	chooser         Chooser
+	output          io.Writer
+	printMu         sync.Mutex
 }
 
 func NewIpService(servicesAddress []string) *IpService {
-	return NewIpServiceWithClient(servicesAddress, requests.DefaultClient)
+	return NewIpServiceWithDeps(servicesAddress, requests.DefaultClient, randomChooser{}, os.Stdout)
 }
 
 func NewIpServiceWithClient(servicesAddress []string, client HTTPClient) *IpService {
+	return NewIpServiceWithDeps(servicesAddress, client, randomChooser{}, os.Stdout)
+}
+
+func NewIpServiceWithDeps(
+	servicesAddress []string,
+	client HTTPClient,
+	chooser Chooser,
+	output io.Writer,
+) *IpService {
+	if output == nil {
+		output = os.Stdout
+	}
 	return &IpService{
 		ServicesAddress: servicesAddress,
 		client:          client,
+		chooser:         chooser,
+		output:          output,
 	}
 }
 
@@ -93,7 +118,7 @@ func (I *IpService) QueryRandom() error {
 		return ErrNoServices
 	}
 
-	serverIP, err := random.Choice(I.ServicesAddress)
+	serverIP, err := I.chooser.Choice(I.ServicesAddress)
 	if err != nil {
 		return err
 	}
@@ -122,5 +147,7 @@ func (I *IpService) request(url string) string {
 }
 
 func (I *IpService) print(serverIP, myIP string) {
-	fmt.Printf("%-42s%s\n", strings.TrimSpace(serverIP), strings.TrimSpace(myIP))
+	I.printMu.Lock()
+	defer I.printMu.Unlock()
+	fmt.Fprintf(I.output, "%-42s%s\n", strings.TrimSpace(serverIP), strings.TrimSpace(myIP))
 }

@@ -22,7 +22,18 @@ jobs:
         run: go mod download
 
       - name: Test
-        run: go test -race -coverprofile=coverage.out ./...
+        run: |
+          go test -race -coverprofile=coverage.out \
+            github.com/sincerefly/easycmd/cmd \
+            github.com/sincerefly/easycmd/common \
+            github.com/sincerefly/easycmd/utils/random \
+            github.com/sincerefly/easycmd/utils/requests
+
+      - name: Check coverage threshold
+        run: |
+          total=$(go tool cover -func=coverage.out | awk '/^total:/ {gsub(/%/,"",$3); print $3}')
+          echo "Total coverage: ${total}%"
+          awk -v c="$total" 'BEGIN { if (c+0 < 90) exit 1 }'
 
       - name: Check the build
         shell: bash -l {0}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -137,5 +138,39 @@ func TestClientPostWithContext(t *testing.T) {
 	}
 	if string(data) != "posted" {
 		t.Fatalf("expected posted, got %s", data)
+	}
+}
+
+type errorReader struct{}
+
+func (errorReader) Read([]byte) (int, error) {
+	return 0, errors.New("read failed")
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (fn roundTripperFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+	return fn(req)
+}
+
+func TestDoBodyReadError(t *testing.T) {
+	client := &Client{
+		httpClient: &http.Client{
+			Transport: roundTripperFunc(func(*http.Request) (*http.Response, error) {
+				return &http.Response{
+					StatusCode: http.StatusOK,
+					Body:       io.NopCloser(errorReader{}),
+					Header:     make(http.Header),
+				}, nil
+			}),
+		},
+	}
+
+	_, statusCode, err := client.Get("http://example.com", nil)
+	if err == nil {
+		t.Fatal("expected read error")
+	}
+	if statusCode != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", statusCode)
 	}
 }

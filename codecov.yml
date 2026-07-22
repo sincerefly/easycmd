@@ -5,14 +5,15 @@ coverage:
     patch: no
     project:
       default:
+        target: 90%
         threshold: 1%
         if_not_found: success
     changes: no
-  #What precision do you want the coverage value to be
   precision: 2
-  #The value range where you want the value to be green
-  range: "50...100"
+  range: "70...100"
 ignore:
+  - "main.go"
+  - "internal/testutil/**"
   - "test/.*"
   - ".github/.*"
   - "images/.*"
