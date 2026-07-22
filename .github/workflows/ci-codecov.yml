@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -30,10 +34,14 @@ jobs:
             github.com/sincerefly/easycmd/common \
             github.com/sincerefly/easycmd/utils/random \
             github.com/sincerefly/easycmd/utils/requests
+          go tool cover -func=coverage.txt | tee coverage-summary.txt
+          awk '/^total:/ {gsub(/%/,"",$3); total=$3} END { if (total+0 < 90) { print "coverage below 90%: " total; exit 1 } }' coverage-summary.txt
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage.txt
+          fail_ci_if_error: true
+          verbose: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

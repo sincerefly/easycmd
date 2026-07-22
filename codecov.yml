@@ -1,5 +1,6 @@
 codecov:
   require_ci_to_pass: yes
+
 coverage:
   status:
     patch: no
@@ -11,15 +12,43 @@ coverage:
     changes: no
   precision: 2
   range: "70...100"
+
+# Map Go module paths and CI checkout paths to repo root.
+fixes:
+  - "github.com/sincerefly/easycmd/::"
+  - "/home/runner/work/easycmd/easycmd/::"
+
 ignore:
   - "main.go"
   - "internal/testutil/**"
+  - "**/*_test.go"
   - "test/.*"
-  - ".github/.*"
-  - "images/.*"
-  - ".mvn/.*"
-  - ".style/.*"
+  - ".github/**"
+  - "images/**"
+  - ".mvn/**"
+  - ".style/**"
   - "*.md"
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: 90%
+        threshold: 1%
+  individual_components:
+    - component_id: cmd
+      name: cmd
+      paths:
+        - cmd/**
+    - component_id: common
+      name: common
+      paths:
+        - common/**
+    - component_id: utils
+      name: utils
+      paths:
+        - utils/**
+
 comment:
   layout: "reach,diff,flags,tree"
   behavior: default
