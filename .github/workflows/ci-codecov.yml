@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   build:
@@ -38,10 +39,10 @@ jobs:
           awk '/^total:/ {gsub(/%/,"",$3); total=$3} END { if (total+0 < 90) { print "coverage below 90%: " total; exit 1 } }' coverage-summary.txt
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ./coverage.txt
+          disable_search: true
           fail_ci_if_error: true
+          use_oidc: true
           verbose: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
