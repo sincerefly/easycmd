@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -73,7 +74,7 @@ func initConfig() {
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if err := v.ReadInConfig(); err != nil {
-		if _, ok := err.(v.ConfigParseError); ok {
+		if _, ok := errors.AsType[v.ConfigParseError](err); ok {
 			log.Fatal(err)
 		}
 		cfgFile = "No config file used"

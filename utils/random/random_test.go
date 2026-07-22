@@ -2,6 +2,7 @@ package random
 
 import (
 	"errors"
+	"slices"
 	"testing"
 )
 
@@ -39,10 +40,10 @@ func TestChoiceEmptySlice(t *testing.T) {
 }
 
 func TestContains(t *testing.T) {
-	if !Contains([]int{1, 2, 3}, 1) {
+	if !slices.Contains([]int{1, 2, 3}, 1) {
 		t.Error("contains {1,2,3} value 1 expected true")
 	}
-	if Contains([]int{1, 2, 3}, 4) {
+	if slices.Contains([]int{1, 2, 3}, 4) {
 		t.Error("contains {1,2,3} value 4 expected false")
 	}
 }

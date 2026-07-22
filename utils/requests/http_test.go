@@ -104,7 +104,7 @@ func TestClientGetWithContext(t *testing.T) {
 	defer server.Close()
 
 	client := NewClient(time.Second)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), time.Second)
 	defer cancel()
 
 	data, statusCode, err := client.GetWithContext(ctx, server.URL, nil)
@@ -126,7 +126,7 @@ func TestClientPostWithContext(t *testing.T) {
 	defer server.Close()
 
 	client := NewClient(time.Second)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	data, statusCode, err := client.PostWithContext(ctx, server.URL, strings.NewReader("payload"))
 	if err != nil {

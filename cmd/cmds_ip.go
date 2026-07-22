@@ -80,11 +80,9 @@ func (I *IpService) QueryAll() error {
 
 	var wg sync.WaitGroup
 	for _, serverIP := range I.ServicesAddress {
-		wg.Add(1)
-		go func(server string) {
-			defer wg.Done()
-			I.print(server, I.request(server))
-		}(serverIP)
+		wg.Go(func() {
+			I.print(serverIP, I.request(serverIP))
+		})
 	}
 	wg.Wait()
 	return nil
